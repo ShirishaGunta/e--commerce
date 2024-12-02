@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Our Products</h2>
+
+    <!-- Filters Section -->
+    <form method="get" action="{{ url_for('products') }}" class="mb-4">
+        <div class="row">
+            <!-- Search Bar -->
+            <div class="col-md-4">
+                <input type="text" name="search" class="form-control" placeholder="Search for products..." value="{{ request.args.get('search', '') }}">
+            </div>
+
+            <!-- Sorting Dropdown -->
+            <div class="col-md-3">
+                <select name="sort" class="form-control">
+                    <option value="">Sort By</option>
+                    <option value="low_to_high" {% if request.args.get('sort') == 'low_to_high' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="high_to_low" {% if request.args.get('sort') == 'high_to_low' %}selected{% endif %}>Price: High to Low</option>
+                </select>
+            </div>
+
+            <!-- Category Filters -->
+            <div class="col-md-3">
+                <select name="category" class="form-control">
+                    <option value="">Filter By Category</option>
+                    {% for category in categories %}
+                    <option value="{{ category }}" {% if request.args.get('category') == category %}selected{% endif %}>{{ category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Filter Button -->
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Apply</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Products List -->
+    {% if products %}
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="{{ product['image_url'] }}" class="card-img-top" alt="{{ product['name'] }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product['name'] }}</h5>
+                    <p class="card-text">{{ product['description'][:100] }}...</p>
+                    <p class="text-success font-weight-bold">${{ "%.2f" | format(product['price']) }}</p>
+                    <a href="{{ url_for('add_to_cart', product_id=product['id']) }}" class="btn btn-primary">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-muted">No products match your search or filter criteria.</p>
+    {% endif %}
+</div>
+{% endblock %}

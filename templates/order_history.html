@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-center my-4">Order History</h2>
+
+{% if orders %}
+<div class="table-responsive">
+    {% for order in orders %}
+    <div class="card my-3">
+        <div class="card-header">
+            <h5>Order ID: {{ order['order_id'] }}</h5>
+            <p>Order Date: {{ order['order_date'] }}</p>
+            <p>Total Amount: ${{ "%.2f" | format(order['total_amount']) }}</p>
+        </div>
+        <div class="card-body">
+            <h6>Items:</h6>
+            <ul>
+                {% for item in order['details'] %}
+                <li>{{ item['product_name'] }} - Quantity: {{ item['quantity'] }}, Price: ${{ "%.2f" | format(item['price']) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-center text-muted">You have no orders yet.</p>
+{% endif %}
+{% endblock %}

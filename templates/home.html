@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Welcome to Our E-Commerce Website</h2>
+    
+    <!-- Display login or logout depending on session -->
+    {% if session.get('user_id') %}
+        <p class="text-center">Welcome, User! <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a></p>
+    {% else %}
+        <p class="text-center">Please <a href="{{ url_for('login') }}">login</a> to enjoy our full features.</p>
+    {% endif %}
+</div>
+{% endblock %}
